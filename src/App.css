@@ -5,15 +5,26 @@
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
+  /* text-align: center; */
   display: flex;
   flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  /* align-items: center; */
+  /* justify-content: center; */
+  /* font-size: calc(10px + 2vmin); */
+  /* color: white; */
+  /* border: thick solid white; */
 }
 
 .tile {
   width: 2px;
   height: 2px;
+}
+
+.grid {
+  display: grid;
+  gap: 0;
+  width: 1200px;
+  height: 600px;
+  margin-top: calc((100vh - 600px) / 2);
+  margin-left: calc((100vw - 1200px) / 2);
 }
