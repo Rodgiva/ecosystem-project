@@ -2,8 +2,13 @@ import { useState, useEffect } from "react";
 import { createNoise2D } from "simplex-noise";
 
 let tiles = [];
+const width = 600;
+const height = 300;
 
-const generateTiles = (width, height, freq = 1) => {
+const pxlWidth = 1200 / width;
+const pxlHeight = 600 / height;
+
+const generateTiles = (width, height, freq = 1, contrast = 1, shift = 0) => {
   const noise2D = createNoise2D();
 
   for (let y = 0; y < height; y++) {
@@ -24,64 +29,44 @@ const generateTiles = (width, height, freq = 1) => {
         amplitude /= 2;
       }
 
+      val *= contrast;
+
+      val += shift;
+
+      if (val > 1) {
+        val = 1;
+      } else if (val < -1) {
+        val = -1;
+      }
+
       tiles[y].push(val);
     }
   }
 };
 
-generateTiles(300, 150, 1);
+generateTiles(width, height, 2, 0.85, 0);
 
 const Game = (props) => {
   const [noise, setNoise] = useState([]);
-  const [width, setWidth] = useState(4);
-  const [height, setHeigth] = useState(4);
-
-  // window.addEventListener("keydown", (e) => {
-  //   switch (e.key) {
-  //     case "z":
-  //     case "ArrowUp":
-  //       break;
-  //     case "s":
-  //     case "ArrowDown":
-  //       break;
-  //     case "q":
-  //     case "ArrowLet":
-  //       break;
-  //     case "d":
-  //     case "ArrowRight":
-  //       break;
-  //     case "+":
-  //       setWidth(width + 2);
-  //       setHeigth(height + 2);
-  //       console.log("+");
-  //       break;
-  //     case "-":
-  //       setWidth(width - 2);
-  //       setHeigth(height - 2);
-  //       console.log("-");
-  //       break;
-  //     default:
-  //       break;
-  //   }
-  // });
 
   useEffect(() => {
     setNoise(tiles);
   }, []);
-  console.log("bip");
 
   const tileColor = (val) => {
     if (val < -0.45) {
       return "blue";
     } else if (val >= -0.45 && val < -0.25) {
       return "rgb(64,92,255)";
-    } else if (val >= -0.25 && val < -0.1) {
+    } else if (val >= -0.25 && val < -0.15) {
       return "yellow";
-    } else if (val >= -0.1 && val < 0.75) {
+    } else if (val >= -0.15 && val < 0.35) {
       return "rgb(0,192,0)";
-    } else if (val >= 0.75 && val < 0.95) {
+    } else if (val >= 0.35 && val < 0.75) {
+      return "rgb(0,128,0)";
+    } else if (val >= 0.75 && val < 1) {
       return "grey";
-    } else if (val >= 0.95) {
+    } else if ((val = 1)) {
       return "white";
     }
   };
@@ -91,8 +76,8 @@ const Game = (props) => {
       <div
         className="grid"
         style={{
-          gridTemplateColumns: "repeat(300, 1fr)",
-          gridTemplateRows: "repeat(150, 1fr)",
+          gridTemplateColumns: `repeat(${width}, 1fr)`,
+          gridTemplateRows: `repeat(${height}, 1fr)`,
         }}
       >
         {noise.map((y, i) => {
@@ -103,25 +88,14 @@ const Game = (props) => {
                   key={i + 1 + j}
                   style={{
                     backgroundColor: tileColor(x),
-                    width: width + "px",
-                    height: height + "px",
+                    width: pxlWidth + "px",
+                    height: pxlHeight + "px",
                   }}
                 ></div>
               ))}
             </>
           );
         })}
-        <div
-          style={{
-            backgroundColor: "black",
-            width: "2px",
-            height: "2px",
-            top: "calc(((100vh - 600px) / 2) + 201px )",
-            left: "calc(((100vw - 1200px) / 2) + 201px)",
-            position: "absolute",
-            borderRadius: "4px",
-          }}
-        ></div>
       </div>
     </>
   );

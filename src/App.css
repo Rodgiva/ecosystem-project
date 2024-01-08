@@ -27,4 +27,6 @@
   height: 600px;
   margin-top: calc((100vh - 600px) / 2);
   margin-left: calc((100vw - 1200px) / 2);
+  border: thick solid white;
+  border-radius: 5px;
 }
